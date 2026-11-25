@@ -1,26 +1,37 @@
-import MoviCard from "./CardComponents/MovieCard.jsx";
-import Home from "./Pages/Home.jsx";
-import "./css/App.css"
-import {Routes, Route} from "react-router-dom"
-import { useEffect, useState } from "react";
-import Favorites from "./Pages/Favorites.jsx";
-import NavBar from "./CardComponents/NavBar.jsx";
-import { MovieProvider } from "./Contexts/MoveContext.jsx";
+import { Route, Routes } from "react-router-dom";
+import Sidebar from "./CardComponents/NavBar";
+import Header from "./CardComponents/Header";
+import Home from "./Pages/Home";
+import Favorites from "./Pages/Favorites";
+import { MovieProvider } from "./Contexts/MoveContext";
+import "./css/App.css";
 
-function App() 
-{
-  return( 
-    <MovieProvider>
-    <NavBar />
-  <main className="main-content">
-    <Routes>
-      <Route path="/" element={<Home />}/>
-      <Route path="/favorites" element={<Favorites />}/>
-     </Routes>
-  </main>  
-  </MovieProvider> 
+function MainContent({ children }) {
+  return <main className="main-content" id="main-content" tabIndex={-1}>{children}</main>;
+}
+
+function AppLayout({ children }) {
+  return (
+    <div className="app-layout">
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <Sidebar />
+      <div className="workspace">
+        <Header />
+        <MainContent>{children}</MainContent>
+      </div>
+    </div>
   );
 }
- 
 
-export default App;
+export default function App() {
+  return (
+    <MovieProvider>
+      <AppLayout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/favorites" element={<Favorites />} />
+        </Routes>
+      </AppLayout>
+    </MovieProvider>
+  );
+}

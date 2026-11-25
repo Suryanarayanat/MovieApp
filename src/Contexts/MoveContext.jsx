@@ -1,47 +1,32 @@
+import { useState, useEffect } from "react";
+import { MovieContext } from "./movieContext";
 
-import { createContext, useState, useContext, useEffect } from "react";
+function readFavorites() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("favorites"));
+    return Array.isArray(saved) ? saved.filter(movie => movie?.id != null) : [];
+  } catch {
+    return [];
+  }
+}
 
-const MovieContext = createContext()
+export function MovieProvider({ children }) {
+  const [favorites, setFavorites] = useState(readFavorites);
 
-export const useMovieContext = () => useContext(MovieContext)
-export const MovieProvider = ({children}) => {
-    const [favorites, setFavorites] = useState([])
-
-    useEffect(() => {
-        const storedFavs =  localStorage.getItem("favorites")
-
-        if(storedFavs) setFavorites (JSON.parse(storedFavs))
-    },[])
-
-    useEffect(() => {
-        localStorage.setItem('favorites', JSON.stringify(favorites))
-    }, [favorites])
-
-    const addToFavorites = (movie) => {
-        setFavorites(prev => [...prev, movie])
-    } 
-    const removeFavorites = (movieId) => {
-        setFavorites(prev => prev.filter(movie => movie.id !== movieId ))
+  useEffect(() => {
+    try {
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    } catch {
+      // Keep session favorites usable when browser storage is unavailable.
     }
+  }, [favorites]);
 
-    const isFavorite = (movieId) => {
-        return favorites.some(movie => movie.id === movieId)
-    }
+  const addToFavorites = movie => setFavorites(items =>
+    items.some(item => item.id === movie.id) ? items : [...items, movie]);
+  const removeFavorites = id => setFavorites(items => items.filter(item => item.id !== id));
+  const isFavorite = id => favorites.some(item => item.id === id);
 
-    const value = {
-        favorites,
-        addToFavorites,
-        removeFavorites,
-        isFavorite
-    }
-
-    return <MovieContext.Provider value={value}>
-        {children}
-    </MovieContext.Provider>
-}   // provide state to any of the components that are wrapped around it 
-
-
-
-// children is a reserved prop when you write a component and children is anything that's inside of the component that you rendered
-
-// Local storage allow us to store values directly within our browser
+  return <MovieContext.Provider value={{ favorites, addToFavorites, removeFavorites, isFavorite }}>
+    {children}
+  </MovieContext.Provider>;
+}

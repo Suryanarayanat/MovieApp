@@ -1,87 +1,52 @@
-import MovieCard from "../CardComponents/MovieCard"
-import { useState, useEffect } from "react";
-import {searchMovies, getPopularMovies} from "../Services/API";
-import "../css/Home.css"
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import MovieCard from "../CardComponents/MovieCard";
+import { getPopularMovies, searchMovies } from "../Services/API";
+import "../css/Home.css";
 
-function Home()
-{
-    const [searchQuery, setSearchQuery] = useState("");             // searchQuery is state setSearchQuery is a function 
-    const [movies, setMovies]= useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
+function MovieResults({ query }) {
+  const [movies, setMovies] = useState(null);
+  const [error, setError] = useState(false);
 
-    useEffect(()=> {
-        const loadPopularMovies = async () => {
-            try
-            {
-                const popularMovies = await getPopularMovies()
-                setMovies(popularMovies)
-            }catch (err) {
-                console.log(err);
-                setError("Failed to load Movies...")
-            }
-            finally {
-                setLoading(false)
-            }
-        }
-        loadPopularMovies()
-    }, [])
-
-    const handleSearch = async (e) => 
-    {
-        e.preventDefault();
-        if(!searchQuery.trim()) return
-        if(loading) return
-
-        setLoading(true)
-        try
-        {
-            const searchResult = await searchMovies(searchQuery)
-            setMovies(searchResult)
-            setError(null)
-        }
-        catch(err)
-        {
-            console.log(err)
-            setError("Faild to search movies...")
-        }
-        finally
-        {
-            setLoading(false)
-        }
-        setSearchQuery("")
+  useEffect(() => {
+    let current = true;
+    async function loadMovies() {
+      try {
+        const results = await (query ? searchMovies(query) : getPopularMovies());
+        if (!Array.isArray(results)) throw new Error("Missing movie results");
+        if (current) setMovies(results);
+      } catch {
+        if (current) setError(true);
+      }
     }
+    loadMovies();
+    return () => { current = false; };
+  }, [query]);
 
-    return(
-    <div className="home">
-        <form onSubmit={handleSearch} className="search-form">
-            <input type="text" 
-            placeholder="Search for movies..." 
-            className="search-input"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}/>
-            <button type="submit" 
-            className="search-button">Search</button>
-        </form>
-
-        {error && <div className="error-message">{error}</div>}
-
-        {loading ? (
-        <div className="loading" role="status" aria-label="Loading movies">
-            <span className="loading-spinner" aria-hidden="true"></span>
-        </div>
-        ) : (
-            <div className="movies-grid">
-            {movies.map(
-                (movie) => 
-                movie.title.toLowerCase().startsWith(searchQuery) && ( 
-                <MovieCard movie={movie} key={movie.id}/>
-                ))}
-        </div>
-        )}
-    </div>
-    );
+  const featured = !query && movies?.find(movie => movie.backdrop_path);
+  return (
+    <section>
+      <h1>{query ? `Results for “${query}”` : "Popular movies"}</h1>
+      {error ? <p role="alert">Movies could not be loaded. Please try again.</p>
+        : !movies ? <p role="status">Loading movies…</p>
+        : movies.length === 0 ? <p role="status">No movies found. Try another title.</p>
+        : <>
+          {featured && <article className="featured">
+            <img alt="" src={`https://image.tmdb.org/t/p/w1280${featured.backdrop_path}`} />
+            <div className="featured-info">
+              <h2>{featured.title}</h2>
+              <p>{featured.release_date?.slice(0, 4)}</p>
+              <p className="synopsis">{featured.overview}</p>
+            </div>
+          </article>}
+          <div className="movies-grid">{movies.map(movie => <MovieCard movie={movie} key={movie.id} />)}</div>
+        </>}
+    </section>
+  );
 }
-export default Home;
 
-// map will do which is going to itterate inside the array one by one 
+export default function Home() {
+  const [params] = useSearchParams();
+  const query = params.get("q")?.trim() || "";
+  return <MovieResults key={query} query={query} />;
+}

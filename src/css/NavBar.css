@@ -1,47 +1,20 @@
-.navbar {
-  background-color: #e88787ae;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.sidebar {
+  align-self: start;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  background: var(--sidebar);
+  padding: var(--space-3) clamp(1rem, 2.5vw, 2.5rem);
 }
-
-.navbar-brand {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.navbar-links {
-  display: flex;
-  gap: 2rem;
-}
-
-.nav-link {
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    padding: 1rem;
-  }
-
-  .navbar-brand {
-    font-size: 1.2rem;
-  }
-
-  .navbar-links {
-    gap: 1rem;
-  }
-
-  .nav-link {
-    padding: 0.5rem;
-  }
+.brand { font-size: 2rem; font-weight: 750; letter-spacing: -.07em; color: var(--accent); }
+.brand span { color: var(--text); }
+.sidebar nav { display: grid; margin-top: clamp(3rem, 8vh, 7rem); gap: var(--space-2); }
+.sidebar nav a { display: flex; align-items: center; gap: var(--space-1); color: var(--secondary); min-height: 44px; }
+.sidebar nav a.active, .sidebar nav a:hover { color: var(--accent); }
+@media (max-width: 44rem) {
+  .sidebar { position: static; height: auto; padding: var(--space-1) var(--gutter); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-1); }
+  .brand { font-size: 1.5rem; }
+  .sidebar nav { display: flex; flex-wrap: wrap; margin: 0; }
 }
