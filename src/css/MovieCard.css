@@ -15,11 +15,11 @@
   width: 44px;
   height: 44px;
   background: rgb(18 18 18 / 88%);
-  color: var(--text);
+  color: var(--on-image);
   border: 0;
   border-radius: var(--round);
 }
-.favorite-btn:hover, .favorite-btn[aria-pressed="true"] { color: var(--accent); }
+.favorite-btn:hover, .favorite-btn[aria-pressed="true"] { color: var(--image-accent); }
 .favorite-btn[aria-pressed="true"] svg { fill: currentColor; }
 .movie-info { padding: var(--space-2); }
 .movie-info h3 { font-size: var(--body-size); }

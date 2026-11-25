@@ -12,6 +12,6 @@
 .featured img, .featured::after { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
 .featured img { object-fit: cover; object-position: center 38%; }
 .featured::after { content: ""; background: linear-gradient(75deg, #062723fa, #092520ce 38%, transparent 90%); }
-.featured-info { padding: var(--gutter); max-width: 38rem; }
+.featured-info { padding: var(--gutter); max-width: 38rem; color: var(--on-image); }
 .featured h2 { font-size: clamp(1.75rem, 4vw, 3rem); }
 .featured .synopsis { margin-top: var(--space-1); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
