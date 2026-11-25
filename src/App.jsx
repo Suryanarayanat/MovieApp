@@ -2,6 +2,7 @@ import MoviCard from "./CardComponents/MovieCard.jsx";
 import Home from "./Pages/Home.jsx";
 import "./css/App.css"
 import {Routes, Route} from "react-router-dom"
+import { useEffect, useState } from "react";
 import Favorites from "./Pages/Favorites.jsx";
 import NavBar from "./CardComponents/NavBar.jsx";
 import { MovieProvider } from "./Contexts/MoveContext.jsx";

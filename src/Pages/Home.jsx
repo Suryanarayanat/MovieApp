@@ -67,7 +67,9 @@ function Home()
         {error && <div className="error-message">{error}</div>}
 
         {loading ? (
-        <div className="loading">Loading...</div>
+        <div className="loading" role="status" aria-label="Loading movies">
+            <span className="loading-spinner" aria-hidden="true"></span>
+        </div>
         ) : (
             <div className="movies-grid">
             {movies.map(

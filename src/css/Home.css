@@ -16,11 +16,15 @@
 .search-input {
   flex: 1;
   padding: 0.75rem 1rem;
-  border: none;
+  border: solid 5px #ccc;
   border-radius: 4px;
-  background-color: #333;
-  color: white;
+  background-color: #ffffff;
+  color: #222;
   font-size: 1rem;
+}
+
+.search-input::placeholder {
+  color: #de5151;
 }
 
 .search-input:focus {
@@ -42,6 +46,32 @@
   background-color: #f40612;
 }
 
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 4px solid #ccc;
+  border-top-color: #e50914;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner {
+    animation-duration: 1.8s;
+  }
+}
 
 @media (max-width: 639px) {
   .home {
@@ -55,7 +85,7 @@
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 240px));
   gap: 1.5rem;
   padding: 1rem;
   width: 100%;
